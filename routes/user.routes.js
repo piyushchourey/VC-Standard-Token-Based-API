@@ -7,7 +7,7 @@ router.post("/register",User.register);
 
 router.post("/login",User.login);
 
-router.get("/dashboard", [Auth.verifyToken], User.getData);
+router.get("/dashboard", User.getData);
 
 router.get("/getData", [Auth.verifyToken], User.getData);
 

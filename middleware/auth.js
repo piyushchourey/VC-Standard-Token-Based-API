@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 var commonServices = require("./commonServices");
 
 const verifyToken = (req, res, next) => {
-  const token = req.body.token || req.query.token || req.headers["x-access-token"] || localStorage.getItem('token');
+  const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.cookies.token;
 
   if (!token) {
     return res.status(403).send({message:"A token is required for authentication"});
@@ -29,7 +29,25 @@ const genrateJWTEncryptedToken= (length,uid) => {
   return token;
 };
 
+const setUser = (req,res,next) =>{
+  const token = req.body.token || req.query.token || req.headers["x-access-token"] || req.cookies.token;
+  if (!token) {
+    return next();
+  }
+  try {
+    const decoded = jwt.verify(token, config.TOKEN_KEY);
+    console.log("fdsfdsf",decoded);
+    req.user = decoded.token;
+  } catch (err) {
+    // return res.status(401).send({message:"Invalid Token! Please genrate new by refresh token",API_ENDPOINT:"http://localhost:4001/getRefreshToken"});
+    return next();
+  }
+  return next();
+
+}
+
 module.exports = { 
   verifyToken, 
+  setUser,
   genrateJWTEncryptedToken 
 }

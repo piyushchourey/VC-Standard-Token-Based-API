@@ -8,13 +8,18 @@ $(document).ready(function () {
             data: formData,
             dataType: "json",
             encode: true,
-        }).done(function (data) {
-            if(data.status==true){
-                showMessage(data.message, 'success');
-                $("#registration_form")[0].reset();
-            }else{
-                showMessage(data.message, 'danger');
+            success : function (data) {
+                if(data.status==true){
+                    showMessage(data.message, 'success');
+                    setTimeout(()=>{
+                        window.location.href='/login'
+                    },2000)
+                }
+            },
+            error : (data)=>{
+                showMessage(data.responseJSON.message, 'error');
             }
+
         });
         event.preventDefault();
     });
@@ -29,13 +34,18 @@ $(document).ready(function () {
             data: formData,
             dataType: "json",
             encode: true,
-        }).done(function (data) {
-            if(data.status==true){
-                showMessage(data.message, 'success');
-                localStorage.setItem("token",data.token);
-                redirectDashboard(data.token)
-            }else{
-                showMessage(data.message, 'danger');
+            success : function (data) {
+                if(data.status==true){
+                    showMessage(data.message, 'success');
+                    localStorage.setItem("token",data.token);
+                    document.cookie = `token=${data.token}`;
+                    setTimeout(()=>{
+                        window.location.href = "/user/dashboard";
+                    },2000)
+                }
+            },
+            error : (data)=>{
+                showMessage(data.responseJSON.message, 'error');
             }
         });
         event.preventDefault();
@@ -47,15 +57,13 @@ $(document).ready(function () {
 });
 
 function showMessage(message, type){
-    const alertPlaceholder = document.getElementById('SuccessFailureAlertWrapper')
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = [
-          `<div class="alert alert-${type} alert-dismissible" role="alert">`,
-          `   <div>${message}</div>`,
-          '</div>'
-        ].join('')
-      
-    alertPlaceholder.append(wrapper)
+    new Noty({
+        theme:'relax',
+        text:message,
+        type:type,
+        layout:'topRight',
+        timeout:2000
+    }).show();
 }
 
 function redirectDashboard(token){

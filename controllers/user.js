@@ -2,7 +2,9 @@ const User = require("./../models/user");
 var bcrypt = require('bcryptjs');
 const auth = require("./../middleware/auth");
 var commonServices = require("./../middleware/commonServices");
+const jwt = require("jsonwebtoken");
 var _ = require('lodash');
+const config = process.env;
 
 const register = async(req, res, next) => {
     // Our register logic starts here
@@ -20,7 +22,7 @@ const register = async(req, res, next) => {
       const oldUser = await User.findOne({ email });
   
       if (oldUser) {
-        return res.status(409).send({status:false,message:"User Already Exist. Please Login"});
+        return res.status(400).send({status:false,message:"User Already Exist. Please Login"});
       }
   
       //Encrypt user password
@@ -71,7 +73,7 @@ const login = async(req, res, next) => {
           // save user token
           userDetail.token = token;
           userDetail.refreshToken = refreshToken;
-          localStorage.setItem("auth-token",token);
+          
           // user
           res.status(200).send({ status:true,message:"Great! Logged In successfully.",token:token});
         }else{
@@ -84,12 +86,21 @@ const login = async(req, res, next) => {
 
 
 const getData = async(req,res,next) =>{
-    const { email } = req.body;
+  const token = req.cookies.token;
+  //console.log(token)
+    // const { email } = req.body;
     try{
-      const user = await User.findOne({ email }).populate("role_id");
-      return res.status(200).json({msg: "Welcome to blinkly 🙌 ", user});
+      const decoded = jwt.verify(token, config.TOKEN_KEY);
+      if(decoded.token){
+        let user_id = commonServices.decryptToken(decoded.token);
+        var user = await User.findById(user_id);
+        console.log(user);
+        res.render('dashboard', {user,token :decoded.token});
+      }else{
+        return res.redirect('/logout');
+      }
     }catch(err){
-      res.status(400).send({message:err.message});
+      return res.redirect('/logout');
     }
 }
 
