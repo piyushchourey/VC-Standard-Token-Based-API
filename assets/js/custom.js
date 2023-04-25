@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $("#registration_form").submit(function (event) {
         var formData = $(this).serialize();
-        console.log('asdsa',formData)
         $.ajax({
             type: "POST",
             url: "/user/register",
@@ -27,7 +26,6 @@ $(document).ready(function () {
     //Login submittion 
     $("#login_form").submit(function (event) {
         var formData = $(this).serialize();
-        console.log('asdsa',formData)
         $.ajax({
             type: "POST",
             url: "/user/login",
@@ -41,7 +39,7 @@ $(document).ready(function () {
                     document.cookie = `token=${data.token}`;
                     setTimeout(()=>{
                         window.location.href = "/user/dashboard";
-                    },2000)
+                    },1000)
                 }
             },
             error : (data)=>{
@@ -50,10 +48,6 @@ $(document).ready(function () {
         });
         event.preventDefault();
     });
-
- 
-
-
 });
 
 function showMessage(message, type){
@@ -64,13 +58,4 @@ function showMessage(message, type){
         layout:'topRight',
         timeout:2000
     }).show();
-}
-
-function redirectDashboard(token){
-    $.ajax({
-        url: "/user/dashboard",
-        type: "GET",
-        beforeSend: function(xhr){xhr.setRequestHeader('x-access-token', token);},
-        success: function() { alert('Success!' + authHeader); }
-     });
 }

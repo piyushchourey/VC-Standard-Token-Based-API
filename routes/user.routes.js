@@ -11,4 +11,6 @@ router.get("/dashboard", User.getData);
 
 router.get("/getData", [Auth.verifyToken], User.getData);
 
+router.get("/getAPIToken", [Auth.verifyToken], User.getAPIToken);
+
 module.exports = router;

@@ -24,6 +24,8 @@ var userRouter = require('./routes/user.routes');
 var authRouter = require('./routes/auth.routes');
 var roleRouter = require('./routes/roles.routes');
 var permissionRouter = require('./routes/permissions.routes');
+var apiRouter = require('./routes/api.routes');
+
 const authMiddleware = require('./middleware/auth');
 // index page
 app.get('/',authMiddleware.setUser,(req,res,next)=>{
@@ -32,21 +34,26 @@ app.get('/',authMiddleware.setUser,(req,res,next)=>{
 }, function(req, res) {
     res.render('index');
 });
-app.use('/registration', function(req, res) {
+
+app.use('/registration', authMiddleware.setUser,(req,res,next)=>{
+    if(req.user) return res.redirect('/user/dashboard');
+    else next();
+}, function(req, res) {
     res.render('registration');
 });
-app.use('/login', function(req, res) {
-    res.render('login');
-});
 
-app.use('/dashboard1', function(req, res) {
-    res.render('dashboard');
+app.use('/login', authMiddleware.setUser,(req,res,next)=>{
+    if(req.user) return res.redirect('/user/dashboard');
+    else next();
+}, function(req, res) {
+    res.render('login');
 });
 
 app.use('/logout', function(req,res){
     res.render('index');
 });
 
+app.use('/api', apiRouter); 
 app.use('/user', userRouter); 
 app.use('/auth', authRouter); 
 app.use('/role', roleRouter); 

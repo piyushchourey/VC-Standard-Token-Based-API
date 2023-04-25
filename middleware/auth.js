@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
     console.log("fdsfdsf",decoded);
     req.user = decoded.token;
   } catch (err) {
-    return res.status(401).send({message:"Invalid Token! Please genrate new by refresh token",API_ENDPOINT:"http://localhost:4001/getRefreshToken"});
+    return res.status(401).send({message:"Invalid Token! Please genrate new by refresh token"});
   }
   return next();
 };
@@ -36,7 +36,6 @@ const setUser = (req,res,next) =>{
   }
   try {
     const decoded = jwt.verify(token, config.TOKEN_KEY);
-    console.log("fdsfdsf",decoded);
     req.user = decoded.token;
   } catch (err) {
     // return res.status(401).send({message:"Invalid Token! Please genrate new by refresh token",API_ENDPOINT:"http://localhost:4001/getRefreshToken"});

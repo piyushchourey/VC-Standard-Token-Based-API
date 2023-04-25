@@ -1,0 +1,68 @@
+<%- include('../partials/dashboard/header') %>
+
+
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/user/dashboard">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/api/authentication">
+          <i class="bi bi-server"></i>
+          <span>Authentication</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Blinkly VC API (1.0.0)</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item">Authentication</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-10">
+            <div class="alert alert-dark bg-dark text-light border-0 alert-dismissible fade show" role="alert">
+               <b>Base URL :-</b> https://vc.blinkly.com
+            </div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Authentication</h5>
+              <p>If authentication is enabled in the Blinkly VC configuration, you will need to supply an access token in the <b>X-Access-Token</b> header. </p>
+              <div class="row">
+                <div class="col-8">
+                    <div class="alert alert-dark bg-dark text-light border-0 alert-dismissible fade show" role="alert">
+                        {<br>
+                            "X-Access-Token": "59fc66a03e54454869460e45"
+                        <br>}
+                    </div>
+                </div>
+              </div>  
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <%- include('../partials/dashboard/footer') %>

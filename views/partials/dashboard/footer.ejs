@@ -1,0 +1,53 @@
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Blinkly</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      Designed by <a href="https://blinkly.com/">Blinkly</a>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+ 
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Template Main JS File -->
+  <script src="/js/dashboard/main.js"></script>
+  <script>
+    $(document).ready(() => {
+        $("#flexSwitchCheckDefault").on('change', (evt) => {
+          if($("#secret_api_token").text()){
+            $("#secret_api_token").text(null);
+          }
+          else {
+            $.ajax({
+              type: "GET",
+              url: "/user/getAPIToken",
+              headers: { 'x-access-token':  localStorage.getItem("token") },
+              dataType: "json",
+              encode: true,
+              success : function (data) {
+                  if(data.status==true){
+                    $("#secret_api_token").text(data.API_TOKEN)
+                  }
+              },
+              error : (data)=>{
+                  showMessage(data.responseJSON.message, 'error');
+              }
+          });
+        }
+      })
+
+        $("#logout").click((evt)=>{
+            alert("sadsad");
+          evt.preventDefault();
+          localStorage.setItem("token",null);
+          document.cookie= "token=;path=/";
+          window.location.reload();
+        })
+      })
+  </script>
+</body>
+</html>

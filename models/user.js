@@ -6,8 +6,9 @@ const userSchema = new mongoose.Schema({
   last_name: { type: String, default: null },
   email: { type: String, unique: true },
   password: { type: String },
-  token: { type: String },
+  user_sess_token: { type: String },
   refreshToken: { type: String },
+  api_token :{ type: String },
   role_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'role'

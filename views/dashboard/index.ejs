@@ -1,0 +1,69 @@
+<%- include('../partials/dashboard/header') %>
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/user/dashboard">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="/api/authentication">
+          <i class="bi bi-server"></i>
+          <span>Authentication</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Blinkly VC API (1.0.0)</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-10">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">API Security keys</h5>
+              <p>These keys will allow you to authenticate API requests. </p>
+              <div class="row">
+                <div class="col-8">
+                    <textarea name="secret_api_token" class="form-control" id="secret_api_token" rows="8" disabled required=""></textarea>
+
+                    <div class="invalid-feedback">Please, enter your name!</div>
+                </div>
+                <div class="col-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input switch" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Reveal your token</label>
+                    </div>
+                </div>
+              </div>  
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <%- include('../partials/dashboard/footer') %>
+

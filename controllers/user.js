@@ -5,6 +5,7 @@ var commonServices = require("./../middleware/commonServices");
 const jwt = require("jsonwebtoken");
 var _ = require('lodash');
 const config = process.env;
+var hexgen = require('hex-generator');
 
 const register = async(req, res, next) => {
     // Our register logic starts here
@@ -27,17 +28,21 @@ const register = async(req, res, next) => {
   
       //Encrypt user password
       encryptedPassword = await bcrypt.hash(password, 10);
-  
+
+      //Genrate API token..
+      var api_token  = auth.genrateJWTEncryptedToken(128,hexgen(90));
+
       // Create user in our database
       var user = await User.create({
         first_name,
         last_name,
         email: email.toLowerCase(), // sanitize: convert email to lowercase
-        password: encryptedPassword
+        password: encryptedPassword,
+        api_token :api_token
       });
 
       var user1 =  _.omit(user, ['_id', 'password','__v']);
-      console.log(user1);
+      
       // return new user
       res.status(200).send({status:true,message:"Nice! You have registered successfully."});
     } catch (err) {
@@ -60,22 +65,22 @@ const login = async(req, res, next) => {
         if (user && (await bcrypt.compare(password, user.password))) {
   
           // Create JWT token
-          var token  = auth.genrateJWTEncryptedToken(128,user.id);
-          console.log("JWT + custom token",token);
+          var user_sess_token  = auth.genrateJWTEncryptedToken(128,user.id);
+          console.log("JWT + custom token",user_sess_token);
   
           //Create Refresh token 
           const refreshToken = commonServices.refreshToken(45)
-          const update = { refreshToken: refreshToken };
+          const update = { user_sess_token: user_sess_token, refreshToken: refreshToken };
   
           // Refresh token updated in DB..
           let userDetail = await User.findOneAndUpdate({ email }, update);
   
           // save user token
-          userDetail.token = token;
+          userDetail.token = user_sess_token;
           userDetail.refreshToken = refreshToken;
           
           // user
-          res.status(200).send({ status:true,message:"Great! Logged In successfully.",token:token});
+          res.status(200).send({ status:true,message:"Great! Logged In successfully.",token:user_sess_token});
         }else{
           res.status(400).send({status:false, message:"Oop's! Invalid Credentials"});
         }
@@ -94,8 +99,7 @@ const getData = async(req,res,next) =>{
       if(decoded.token){
         let user_id = commonServices.decryptToken(decoded.token);
         var user = await User.findById(user_id);
-        console.log(user);
-        res.render('dashboard', {user,token :decoded.token});
+        res.render('dashboard/index', {user,token :decoded.token});
       }else{
         return res.redirect('/logout');
       }
@@ -104,8 +108,18 @@ const getData = async(req,res,next) =>{
     }
 }
 
+const getAPIToken = async(req,res)=>{
+  let user_id = commonServices.decryptToken(req.user);
+  var user = await User.findById(user_id);
+  res.status(200).send({ status:true, API_TOKEN:user.api_token});
+}
+
+
+
+
 module.exports = {
     register,
     login,
-    getData
+    getData,
+    getAPIToken
 };

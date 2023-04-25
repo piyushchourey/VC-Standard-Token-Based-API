@@ -2,7 +2,6 @@ const Permission = require("./../models/permissions");
 var commonServices = require("./../middleware/commonServices");
 
 const add = async(req, res, next) => {
-    console.log(req.body);
     try {
       // Get roles input
       const { perm_name, perm_description } = req.body;
